@@ -1,5 +1,6 @@
 const AuditLog = require("../models/AuditLog");
 
+
 const getAuditLogs = async (req, res) => {
     try {
         const { patientId } = req.params;

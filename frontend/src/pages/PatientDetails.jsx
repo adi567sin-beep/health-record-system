@@ -24,7 +24,7 @@ function PatientDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [accessDenied, setAccessDenied] = useState(false);
-
+    const [hasConsent, setHasConsent] = useState(true);
 
     // ==========================================
     // LOAD PATIENT
@@ -190,6 +190,12 @@ function PatientDetails() {
 
                     <ConsentStatus
                         patientId={patientId}
+                        onConsentChange={(active) => {
+                            setHasConsent(active);
+                            if (active) {
+                                window.location.reload();
+                            }
+                        }}
                     />
 
 
@@ -286,33 +292,47 @@ function PatientDetails() {
             <main className="dashboard-container">
 
 
-                {/* PAGE HEADER */}
+               
+{/* PAGE HEADER */}
 
-                <section className="dashboard-header">
+<section className="dashboard-header">
 
-                    <div>
+    <div>
 
-                        <h1>
-                            Patient Medical History
-                        </h1>
+        <h1>
+            Patient Medical History
+        </h1>
 
-                        <p>
-                            Unified medical information
-                            from authorized healthcare providers.
-                        </p>
+        <p>
+            Unified medical information
+            from authorized healthcare providers.
+        </p>
 
-                    </div>
+    </div>
 
+    <div className="patient-header-actions">
 
-                    <div className="consent-badge">
+        <button
+            className="add-diagnosis-btn"
+            onClick={() =>
+                navigate(`/patients/${patientId}/add-diagnosis`)
+            }
+        >
+            + Add Diagnosis
+        </button>
 
-                        <span className="status-dot"></span>
+        <div className="consent-badge">
 
-                        Authorized Access
+            <span className="status-dot"></span>
 
-                    </div>
+            Authorized Access
 
-                </section>
+        </div>
+
+    </div>
+
+</section>
+               
 
 
                 {/* PATIENT INFORMATION */}
@@ -326,8 +346,21 @@ function PatientDetails() {
 
                 <ConsentStatus
                     patientId={patientId}
+                    onConsentChange={(active) => {
+                        setHasConsent(active);
+
+                        if (!active) {
+                            setPatient(null);
+                            setRecords([]);
+                            setTimeline([]);
+                            setAccessDenied(true);
+                            setError(
+                                "Valid patient consent is required to view this medical history."
+                            );
+                        }
+                    }}
                 />
-                
+
                 <AISummary patientId={patientId} />
 
                 <AIChat patientId={patientId} />
@@ -344,10 +377,10 @@ function PatientDetails() {
                 <MedicalTimeline
                     timeline={timeline}
                 />
-                
+
                 <AuditLog patientId={patientId} />
 
-               
+
 
             </main>
 

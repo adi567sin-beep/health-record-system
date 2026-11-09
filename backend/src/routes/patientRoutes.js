@@ -5,9 +5,14 @@ const {
     authorize
 } = require("../middleware/authMiddleware");
 
+
+
 const {
     getPatient,
-    matchPatient
+    matchPatient,
+    searchPatientMatches,
+    getMyRecords,
+    addDiagnosis
 } = require("../controllers/patientController");
 
 const router = express.Router();
@@ -18,6 +23,13 @@ const router = express.Router();
  * Retrieves an authorized patient's
  * medical history and timeline.
  */
+router.get(
+    "/my-records",
+    authenticate,
+    authorize("patient"),
+    getMyRecords
+);
+
 router.get(
     "/:patientId",
     authenticate,
@@ -30,6 +42,20 @@ router.post(
     authenticate,
     authorize("doctor"),
     matchPatient
+);
+
+router.post(
+    "/match/search",
+    authenticate,
+    authorize("doctor"),
+    searchPatientMatches
+);
+
+router.post(
+    "/:patientId/diagnoses",
+    authenticate,
+    authorize("doctor"),
+    addDiagnosis
 );
 
 module.exports = router;

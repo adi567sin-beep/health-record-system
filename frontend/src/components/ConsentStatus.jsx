@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 
-function ConsentStatus({ patientId }) {
+function ConsentStatus({ patientId, onConsentChange }) {
 
     const [consent, setConsent] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -100,9 +100,11 @@ function ConsentStatus({ patientId }) {
             );
 
 
-            setConsent(
-                response.data.consent
-            );
+            setConsent(response.data.consent);
+
+            if (onConsentChange) {
+                onConsentChange(true);
+            }
 
             setError("");
 
@@ -152,9 +154,11 @@ function ConsentStatus({ patientId }) {
 
             setConsent(null);
 
-            setError(
-                "Consent has been revoked."
-            );
+            if (onConsentChange) {
+                onConsentChange(false);
+            }
+
+            setError("Consent has been revoked.");
 
         } catch (error) {
 

@@ -1,0 +1,132 @@
+
+.patient-dashboard {
+    min-height: 100vh;
+    background: #f4f7fb;
+    color: #1e293b;
+    font-family: Arial, sans-serif;
+}
+
+.patient-dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 6%;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.patient-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.add-diagnosis-btn {
+    background: #176b45;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.add-diagnosis-btn:hover {
+    background: #105536;
+}
+
+.diagnosis-form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-top: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.diagnosis-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.diagnosis-form-container input,
+.diagnosis-form-container textarea,
+.diagnosis-form-container select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+.diagnosis-form-container textarea {
+    min-height: 100px;
+}
+
+.diagnosis-form-container form button {
+    background: #176b45;
+    color: white;
+    padding: 13px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.patient-dashboard-header h1 {
+    margin: 0;
+    color: #1769aa;
+    font-size: 25px;
+}
+
+.patient-dashboard-header p {
+    margin: 6px 0 0;
+    color: #64748b;
+}
+
+.patient-dashboard-header button,
+.patient-dashboard button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #1769aa;
+    color: white;
+    cursor: pointer;
+}
+
+.patient-dashboard-content {
+    width: min(1000px, 88%);
+    margin: 35px auto;
+}
+
+.patient-welcome {
+    margin-bottom: 24px;
+}
+
+.patient-welcome h2 {
+    margin-bottom: 8px;
+    font-size: 28px;
+}
+
+.patient-welcome p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.patient-info-card {
+    margin-bottom: 20px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.patient-info-card h3 {
+    margin-top: 0;
+    color: #1769aa;
+}
+
+.patient-info-card p {
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}

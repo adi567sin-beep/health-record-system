@@ -30,7 +30,19 @@ const userSchema = new mongoose.Schema(
         hospitalId: {
             type: String,
             default: null
+        },
+
+        hospitalName: {
+            type: String,
+            default: null,
+            trim: true
+        },
+        patientId: {
+            type: String,
+            default: null,
+            index: true
         }
+
     },
     {
         timestamps: true

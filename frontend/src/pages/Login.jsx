@@ -6,6 +6,7 @@ import "./Login.css";
 function Login() {
     const navigate = useNavigate();
 
+    const [role, setRole] = useState("doctor");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -13,7 +14,6 @@ function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
         setError("");
 
         if (!email || !password) {
@@ -26,23 +26,25 @@ function Login() {
 
             const response = await API.post("/auth/login", {
                 email,
-                password
+                password,
+                role
             });
 
-            // Store authentication information
-            localStorage.setItem(
-                "token",
-                response.data.token
-            );
+            // Verify that the returned role matches the selected role.
+            if (response.data.user.role !== role) {
+                setError("This account does not match the selected login type.");
+                return;
+            }
 
+            localStorage.setItem("token", response.data.token);
             localStorage.setItem(
                 "user",
                 JSON.stringify(response.data.user)
             );
 
-            // Go to dashboard
-            navigate("/dashboard");
-
+            navigate(
+                role === "patient" ? "/patient-dashboard" : "/dashboard"
+            );
         } catch (error) {
             console.error("Login error:", error);
 
@@ -50,7 +52,6 @@ function Login() {
                 error.response?.data?.message ||
                 "Invalid email or password."
             );
-
         } finally {
             setLoading(false);
         }
@@ -58,45 +59,16 @@ function Login() {
 
     return (
         <div className="login-page">
-        
-            {/* Background medical decorations */}
-            <div className="medical-icon stethoscope">
-                ♡
-            </div>
-
-            <div className="medical-icon network">
-                ✣
-            </div>
-
-            <div className="medical-icon heart">
-                ♡
-            </div>
-
-            <div className="medical-icon caduceus">
-                ⚕
-            </div>
-
-            <div className="medical-icon network network-two">
-                ✣
-            </div>
-
-            <div className="medical-icon caduceus caduceus-two">
-                ⚕
-            </div>
-
-            <div className="sparkle">
-                ✦
-            </div>
-
-
-            {/* Header */}
+            <div className="medical-icon stethoscope">♡</div>
+            <div className="medical-icon network">✣</div>
+            <div className="medical-icon heart">♡</div>
+            <div className="medical-icon caduceus">⚕</div>
+            <div className="medical-icon network network-two">✣</div>
+            <div className="medical-icon caduceus caduceus-two">⚕</div>
+            <div className="sparkle">✦</div>
 
             <header className="login-header">
-
-                <div
-                    className="brand"
-                    onClick={() => navigate("/")}
-                >
+                <div className="brand" onClick={() => navigate("/")}>
                     HealthRecord AI
                 </div>
 
@@ -105,205 +77,153 @@ function Login() {
                     <a href="#security">Security</a>
                     <a href="#support">Support</a>
                 </nav>
-
             </header>
 
-
-            {/* Main content */}
-
             <main className="login-main">
-
                 <section className="login-hero">
-
-                    <h1>
-                        HealthRecord AI
-                    </h1>
-
-                    <p>
-                        Secure Cross-Hospital Medical Record System
-                    </p>
-
+                    <h1>HealthRecord AI</h1>
+                    <p>Secure Cross-Hospital Medical Record System</p>
                 </section>
 
-
-                {/* Login Card */}
-
                 <div className="login-card">
-
                     <div className="login-card-header">
-
                         <h2>
-                            Doctor Login
+                            {role === "doctor" ? "Doctor Login" : "Patient Login"}
                         </h2>
-
                         <p>
-                            Sign in to securely access authorized
-                            patient records.
+                            {role === "doctor"
+                                ? "Sign in to securely access authorized patient records."
+                                : "Sign in securely to access your own health records."}
                         </p>
-
                     </div>
 
+                    <div className="login-role-switch">
+                        <button
+                            type="button"
+                            className={role === "doctor" ? "active" : ""}
+                            onClick={() => {
+                                setRole("doctor");
+                                setError("");
+                            }}
+                        >
+                            Doctor
+                        </button>
+
+                        <button
+                            type="button"
+                            className={role === "patient" ? "active" : ""}
+                            onClick={() => {
+                                setRole("patient");
+                                setError("");
+                            }}
+                        >
+                            Patient
+                        </button>
+                    </div>
 
                     <form onSubmit={handleLogin}>
-
-                        {/* Email */}
-
                         <div className="form-group">
-
-                            <label htmlFor="email">
-                                Email Address
-                            </label>
-
+                            <label htmlFor="email">Email Address</label>
                             <div className="input-wrapper">
-
                                 <input
                                     id="email"
                                     type="email"
-                                    placeholder="doctor@example.com"
-                                    value={email}
-                                    onChange={(e) =>
-                                        setEmail(e.target.value)
+                                    placeholder={
+                                        role === "doctor"
+                                            ? "doctor@example.com"
+                                            : "patient@example.com"
                                     }
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     autoComplete="email"
                                 />
-
-                                <span className="input-icon">
-                                    ✉
-                                </span>
-
+                                <span className="input-icon">✉</span>
                             </div>
-
                         </div>
 
-
-                        {/* Password */}
-
                         <div className="form-group">
-
-                            <label htmlFor="password">
-                                Password
-                            </label>
-
+                            <label htmlFor="password">Password</label>
                             <div className="input-wrapper">
-
                                 <input
                                     id="password"
                                     type="password"
                                     placeholder="Enter your password"
                                     value={password}
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
-                                    }
+                                    onChange={(e) => setPassword(e.target.value)}
                                     autoComplete="current-password"
                                 />
-
-                                <span className="input-icon">
-                                    🔒
-                                </span>
-
+                                <span className="input-icon">🔒</span>
                             </div>
-
                         </div>
 
-
-                        {/* Error */}
-
                         {error && (
-                            <div className="login-error">
-                                {error}
-                            </div>
+                            <div className="login-error">{error}</div>
                         )}
-
-
-                        {/* Sign In */}
 
                         <button
                             type="submit"
                             className="sign-in-button"
                             disabled={loading}
                         >
-                            {loading
-                                ? "Signing In..."
-                                : "Sign In"}
+                            {loading ? "Signing In..." : "Sign In"}
                         </button>
-
                     </form>
 
-
-                    {/* OR */}
-
                     <div className="or-divider">
-
                         <span></span>
-
                         <p>OR</p>
-
                         <span></span>
-
                     </div>
 
-
-                    {/* Other options */}
-
                     <div className="login-options">
-
                         <button
                             type="button"
                             className="text-button"
-                            onClick={() =>
-                                alert("Password recovery coming soon.")
-                            }
+                            onClick={() => alert("Password recovery coming soon.")}
                         >
                             Forgot Password?
                         </button>
 
+                        {role === "doctor" && (
+                            <button
+                                type="button"
+                                className="text-button"
+                                onClick={() => navigate("/register")}
+                            >
+                                Create Account
+                                <span>(Healthcare Personnel Only)</span>
+                            </button>
+                        )}
 
-                        <button
-                            type="button"
-                            className="text-button"
-                            onClick={() =>
-                                navigate("/register")
-                            }
-                        >
-                            Create Account
-                            <span>
-                                (Healthcare Personnel Only)
-                            </span>
-                        </button>
-
+                        {role === "patient" && (
+                            <button
+                                type="button"
+                                className="text-button"
+                                onClick={() => navigate("/patient-register")}
+                            >
+                                Create Patient Account
+                            </button>
+                        )}
 
                         <button
                             type="button"
                             className="mfa-button"
-                            onClick={() =>
-                                alert("MFA/SSO options coming soon.")
-                            }
+                            onClick={() => alert("MFA/SSO options coming soon.")}
                         >
                             MFA/SSO Options
                         </button>
-
                     </div>
-
-
-                    {/* Security notice */}
 
                     <div className="security-notice">
-
-                        <span className="security-lock">
-                            🔒
-                        </span>
-
+                        <span className="security-lock">🔒</span>
                         <span>
-                            Authorized healthcare personnel only.
-                            Access is monitored.
+                            {role === "doctor"
+                                ? "Authorized healthcare personnel only. Access is monitored."
+                                : "Your health information is protected. Access is monitored."}
                         </span>
-
                     </div>
-
                 </div>
-
             </main>
-
         </div>
     );
 }

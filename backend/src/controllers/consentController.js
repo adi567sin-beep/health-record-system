@@ -293,9 +293,6 @@ const grantConsent = async (req, res) => {
 };
 
 
-// ==========================================
-// EXPORT CONTROLLERS
-// ==========================================
 module.exports = {
 
     createConsent,

@@ -590,3 +590,31 @@
         font-size: 25px;
     }
 }
+
+
+.login-role-switch {
+    display: flex;
+    gap: 10px;
+    margin: 0 0 24px;
+    padding: 5px;
+    border-radius: 10px;
+    background: #f0f4f8;
+}
+
+.login-role-switch button {
+    flex: 1;
+    padding: 11px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #334155;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-role-switch button.active {
+    background: #ffffff;
+    color: #1769aa;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}

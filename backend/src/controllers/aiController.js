@@ -7,10 +7,6 @@ const {
 } = require("../services/aiService");
 
 
-/*
-    Check whether the logged-in doctor has
-    valid consent for the patient.
-*/
 const checkConsent = async (patientId, doctorId) => {
 
     const consent = await Consent.findOne({
@@ -25,11 +21,6 @@ const checkConsent = async (patientId, doctorId) => {
     return consent;
 };
 
-
-/*
-    Ask AI a question about the patient's
-    medical history.
-*/
 const askAI = async (req, res) => {
 
     try {
@@ -49,7 +40,7 @@ const askAI = async (req, res) => {
         }
 
 
-        // Check patient consent
+
         const consent = await checkConsent(
             patientId,
             req.user.id
@@ -65,7 +56,6 @@ const askAI = async (req, res) => {
         }
 
 
-        // Get medical records
         const records =
             await MedicalRecord.find({
                 patientId
@@ -74,7 +64,6 @@ const askAI = async (req, res) => {
             });
 
 
-        // Send only required information to AI
       const result = await askMedicalQuestion(
           question,
        records.map((record, index) => ({
@@ -104,11 +93,6 @@ const askAI = async (req, res) => {
     }
 };
 
-
-/*
-    Generate complete AI summary
-    of the patient's medical history.
-*/
 const generateSummary = async (
     req,
     res
@@ -121,7 +105,7 @@ const generateSummary = async (
         } = req.params;
 
 
-        // Check patient consent
+
         const consent = await checkConsent(
             patientId,
             req.user.id
@@ -137,7 +121,7 @@ const generateSummary = async (
         }
 
 
-        // Get all patient records
+
         const records =
             await MedicalRecord.find({
                 patientId
@@ -155,7 +139,6 @@ const generateSummary = async (
         }
 
 
-        // Send records to AI service
       const result =
     await generateMedicalSummary(
         records.map((record, index) => ({

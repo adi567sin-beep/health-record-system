@@ -14,10 +14,6 @@ app = FastAPI(
     version="2.0"
 )
 
-# --------------------------------
-# Gemini Client
-# --------------------------------
-
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
@@ -26,9 +22,6 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 
 
-# --------------------------------
-# Data Models
-# --------------------------------
 
 class MedicalRecord(BaseModel):
     sourceId: int = 0
@@ -48,10 +41,6 @@ class QuestionRequest(BaseModel):
     records: List[MedicalRecord]
 
 
-# --------------------------------
-# Health Check
-# --------------------------------
-
 @app.get("/")
 def home():
     return {
@@ -60,9 +49,6 @@ def home():
     }
 
 
-# --------------------------------
-# Gemini Helper
-# --------------------------------
 
 def call_gemini(prompt: str):
 
@@ -74,9 +60,7 @@ def call_gemini(prompt: str):
     return response.text
 
 
-# --------------------------------
-# AI Medical Summary
-# --------------------------------
+
 
 @app.post("/summary")
 def generate_summary(request: SummaryRequest):
@@ -145,9 +129,7 @@ Provide:
     }
 
 
-# --------------------------------
-# AI Medical Q&A
-# --------------------------------
+
 
 @app.post("/ask")
 def ask_question(request: QuestionRequest):

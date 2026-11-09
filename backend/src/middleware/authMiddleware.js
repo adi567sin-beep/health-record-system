@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 
+const AuditLog = require("../models/AuditLog");
 const authenticate = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
@@ -47,10 +48,9 @@ const authenticate = (req, res, next) => {
 };
 
 
+
 const authorize = (...roles) => {
-
-    return (req, res, next) => {
-
+    return async (req, res, next) => {
         if (!req.user) {
             return res.status(401).json({
                 message: "Authentication required."
@@ -58,11 +58,45 @@ const authorize = (...roles) => {
         }
 
         if (!roles.includes(req.user.role)) {
+            const patientId = req.params.patientId;
+
+            if (patientId) {
+                try {
+                    const userId = req.user.id || req.user._id;
+
+                    if (!userId) {
+                        console.error(
+                            "Cannot log ACCESS_DENIED: user ID missing."
+                        );
+                    } else {
+                        const log = await AuditLog.create({
+                            userId,
+                            patientId,
+                            action: "ACCESS_DENIED",
+                            ipAddress: req.ip
+                        });
+
+                        console.log(
+                            "ACCESS_DENIED audit log saved:",
+                            log._id
+                        );
+                    }
+                } catch (error) {
+                    console.error(
+                        "Failed to save ACCESS_DENIED audit log:",
+                        error
+                    );
+                }
+            }
+
             return res.status(403).json({
                 message:
                     "You do not have permission to perform this action."
             });
         }
+
+
+
 
         next();
     };
